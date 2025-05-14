@@ -28,11 +28,7 @@ jobs:
 
     
 
-      - name: Upload Bicep Template
-        uses: actions/upload-artifact@v3.1.2
-        with:
-          name: bicep-template
-          path: infra/webapp.bicep
+   
 
   deploy:
     needs: buildandtest
