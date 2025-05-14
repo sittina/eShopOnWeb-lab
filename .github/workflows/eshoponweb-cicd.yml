@@ -63,12 +63,12 @@ jobs:
           subscriptionId: dedd14f3-848a-413f-940a-2274596d0f85
           resourceGroupName: ${{ env.RESOURCE-GROUP }}
           template: webapp.bicep
-          parameters: appServiceName=eshoponweb-webapp-NAME location=westeurope
+          parameters: appServiceName=devops-webapp-westeurope-77993361 location=westeurope
 
       - name: Deploy Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: eshoponweb-webapp-NAME
+          app-name: devops-webapp-westeurope-77993361
           package: .
 
 
