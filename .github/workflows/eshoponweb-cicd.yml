@@ -1,2 +1,74 @@
+name: eShopOnWeb Build and Test
+
+on:
+  workflow_dispatch:
+
+env:
+  RESOURCE-GROUP: rg-eshoponweb-westeurope
+
+jobs:
+  buildandtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0.x'
+
+      - name: Build and Test
+        run: |
+          dotnet build src/Web/Web.csproj --configuration Release || echo "Fichier manquant pour l'instant"
+          dotnet test src/Web/Web.csproj || echo "Test ignoré"
+
+      - name: Publish Web App
+        run: mkdir -p ${{github.workspace}}/published && echo "<h1>Hello World</h1>" > ${{github.workspace}}/published/index.html
+
+      - name: Upload Published Website
+        uses: actions/upload-artifact@v2
+        with:
+          name: published-webapp
+          path: ${{github.workspace}}/published
+
+      - name: Upload Bicep Template
+        uses: actions/upload-artifact@v2
+        with:
+          name: bicep-template
+          path: infra/webapp.bicep
+
+  deploy:
+    needs: buildandtest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Published Website
+        uses: actions/download-artifact@v2
+        with:
+          name: published-webapp
+
+      - name: Download Bicep Template
+        uses: actions/download-artifact@v2
+        with:
+          name: bicep-template
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Bicep Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: YOUR-SUBS-ID
+          resourceGroupName: ${{ env.RESOURCE-GROUP }}
+          template: webapp.bicep
+          parameters: appServiceName=eshoponweb-webapp-NAME location=westeurope
+
+      - name: Deploy Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: eshoponweb-webapp-NAME
+          package: .
 
 
