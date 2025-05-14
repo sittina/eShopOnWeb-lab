@@ -27,13 +27,13 @@ jobs:
         run: mkdir -p ${{github.workspace}}/published && echo "<h1>Hello World</h1>" > ${{github.workspace}}/published/index.html
 
       - name: Upload Published Website
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: published-webapp
           path: ${{github.workspace}}/published
 
       - name: Upload Bicep Template
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: bicep-template
           path: infra/webapp.bicep
