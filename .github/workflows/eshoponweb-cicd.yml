@@ -60,7 +60,7 @@ jobs:
       - name: Deploy Bicep Template
         uses: azure/arm-deploy@v1
         with:
-          subscriptionId: YOUR-SUBS-ID
+          subscriptionId: dedd14f3-848a-413f-940a-2274596d0f85
           resourceGroupName: ${{ env.RESOURCE-GROUP }}
           template: webapp.bicep
           parameters: appServiceName=eshoponweb-webapp-NAME location=westeurope
